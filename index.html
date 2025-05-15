@@ -174,7 +174,7 @@
     Click To Enter .
   </div>
 
-  <div id="visit-label">Visits : 13K</div>
+  <div id="visit-label">Visits: ...</div>
 
   <audio id="bg-music" autoplay muted loop>
     <source src="502.mp3" type="audio/mpeg">
@@ -217,6 +217,17 @@
       };
       setInterval(createSnow, 150);
     }
+
+    // تحديث عدد الزيارات من countapi
+    fetch('https://api.countapi.xyz/hit/0lrushy/homepage')
+      .then(response => response.json())
+      .then(data => {
+        document.getElementById('visit-label').textContent = 'Visits: ' + data.value.toLocaleString();
+      })
+      .catch(err => {
+        console.error('Error fetching visit count:', err);
+        document.getElementById('visit-label').textContent = 'Visits: N/A';
+      });
   </script>
 
 </body>
