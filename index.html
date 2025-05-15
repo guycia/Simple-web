@@ -20,11 +20,27 @@
       padding: 0;
       box-sizing: border-box;
     }
+
     body {
       background: black;
       font-family: 'Press Start 2P', monospace;
       color: white;
       overflow: hidden;
+      position: relative;
+    }
+
+    /* 🔴 الخلفية الشفافة */
+    body::before {
+      content: "";
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: url('bg.jpg') no-repeat center center / cover;
+      opacity: 0.08;
+      z-index: 0;
+      pointer-events: none;
     }
 
     /* شاشة الدخول */
@@ -42,13 +58,11 @@
       z-index: 10000;
     }
 
-    /* المحتوى الأساسي مخفي في البداية */
     #main-content {
       display: none;
       animation: fadeIn 2s ease forwards;
     }
 
-    /* المحتوى بعد الدخول */
     body.show-main #main-content {
       display: block;
     }
@@ -62,10 +76,9 @@
       to { opacity: 1; }
     }
 
-    /* محتوى الصفحة */
     body.show-main {
       overflow: auto;
-      background: #000;
+      background: transparent;
       color: #fff;
       animation: fadeIn 2s ease;
     }
@@ -183,7 +196,6 @@
   </div>
 
   <script>
-    // عند الضغط على شاشة الدخول، نخفيها ونظهر المحتوى الأساسي
     function enterSite() {
       document.body.classList.add('show-main');
 
@@ -196,7 +208,6 @@
         });
       }, 1000);
 
-      // بدء انشاء الثلوج
       const createSnow = () => {
         const snow = document.createElement("div");
         snow.classList.add("snowflake");
