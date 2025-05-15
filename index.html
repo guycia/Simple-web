@@ -4,24 +4,12 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>0lRushy Was Here</title>
-
-  <!-- ✅ أيقونة التبويب (favicon) -->
   <link rel="icon" type="image/png" href="dsd.png" />
-
   <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet" />
-  <link
-    rel="stylesheet"
-    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
-    crossorigin="anonymous"
-    referrerpolicy="no-referrer"
-  />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
 
   <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
 
     body {
       background: black;
@@ -31,7 +19,6 @@
       position: relative;
     }
 
-    /* 🔴 الخلفية الشفافة */
     body::before {
       content: "";
       position: fixed;
@@ -64,13 +51,8 @@
       animation: fadeIn 2s ease forwards;
     }
 
-    body.show-main #main-content {
-      display: block;
-    }
-
-    body.show-main #entry-screen {
-      display: none;
-    }
+    body.show-main #main-content { display: block; }
+    body.show-main #entry-screen { display: none; }
 
     @keyframes fadeIn {
       from { opacity: 0; }
@@ -90,7 +72,6 @@
       align-items: center;
       justify-content: center;
       height: 100vh;
-      position: relative;
       z-index: 2;
       text-align: center;
       padding: 20px;
@@ -149,16 +130,14 @@
     }
 
     @keyframes fall {
-      to {
-        transform: translateY(110vh);
-      }
+      to { transform: translateY(110vh); }
     }
 
     #visit-label {
       position: fixed;
       top: 10px;
       left: 10px;
-      color: rgb(255, 255, 255);
+      color: white;
       font-family: 'Press Start 2P', monospace;
       font-size: 0.8em;
       text-shadow: 0 0 8px red, 0 0 3px white;
@@ -218,14 +197,14 @@
       setInterval(createSnow, 150);
     }
 
-    // تحديث عدد الزيارات من countapi
-    fetch('https://api.countapi.xyz/hit/0lrushy/homepage')
-      .then(response => response.json())
-      .then(data => {
-        document.getElementById('visit-label').textContent = 'Visits: ' + data.value.toLocaleString();
+    // ✅ عداد زيارات باستخدام Google Sheets
+    fetch("https://script.google.com/macros/s/AKfycbwO4MtdoAvNTB0HpM5iPa97ccGODbHwkf4iSC0NU7PeNk78o2RglVxII6cWaYjz5G03/exec")
+      .then(response => response.text())
+      .then(count => {
+        document.getElementById('visit-label').textContent = 'Visits: ' + count;
       })
       .catch(err => {
-        console.error('Error fetching visit count:', err);
+        console.error('خطأ في جلب عدد الزيارات:', err);
         document.getElementById('visit-label').textContent = 'Visits: N/A';
       });
   </script>
