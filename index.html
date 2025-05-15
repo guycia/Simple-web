@@ -174,8 +174,8 @@
           const ip = data.ip;
           console.log('Visitor IP:', ip);
 
-          // رابط Google Apps Script الخاص بك
-          const gasURL = 'https://script.googleusercontent.com/macros/echo?user_content_key=AehSKLh1ChCfAG1CW70914RT1ngzw5BclbI3ck-tTv8DTwr00g2ApycmF9Igqwdictlis46zg5k6IV4PNTh9URvl6hktw9Ch0FONYpPPkEmLQ81Gz3BXIFWnG7KMjKkH7V3LCXEuAoWDKtt1Bezu-0unQXYyK_GYzaz2r98NUSLik5HAVWVXJwliu01mkrCD3X7f5wsP0TWSP8UQKw4XdHskG5H1nj9b9Txdw-94vc9hxPSovbdX_CwA_a-mRXuJdgudOsESD2gVPEtp4kgRTt5ZQkXPqqvxJA&lib=MGHy2jakBS6M1xLlSb7xW6BWX-furbjGZ';
+          // رابط Google Apps Script الخاص بك - عدلته هنا
+          const gasURL = 'https://script.google.com/macros/s/AKfycbxKvTAnQhresyE7v_3OVz_KKyxdDWKGtlZDoiKpxBYnSFc7i5QSMTd3zzB5g2XzlRYS/exec';
 
           fetch(gasURL + '?ip=' + encodeURIComponent(ip))
             .then(res => res.text())
@@ -192,6 +192,7 @@
       // ** نهاية جلب IP وإرساله **
     }
 
+    // جلب عدد الزيارات من GAS (تأكد أنك عدلت السكربت لاسترجاع العدد)
     fetch("https://script.google.com/macros/s/AKfycbwO4MtdoAvNTB0HpM5iPa97ccGODbHwkf4iSC0NU7PeNk78o2RglVxII6cWaYjz5G03/exec")
       .then(response => response.text())
       .then(count => {
