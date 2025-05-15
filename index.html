@@ -9,7 +9,6 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
 
   <style>
-    /* نفس التنسيق اللي عندك بدون تغيير */
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
       background: black;
@@ -18,15 +17,30 @@
       overflow: hidden;
       position: relative;
     }
+    #entry-screen {
+      position: fixed;
+      inset: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+      text-shadow: 0 0 10px green, 0 0 5px white;
+      font-size: 1.5em;
+      user-select: none;
+      background: black;
+      z-index: 10000;
+    }
     #main-content {
-      display: block;
+      display: none;
       animation: fadeIn 2s ease forwards;
     }
+    body.show-main #main-content { display: block; }
+    body.show-main #entry-screen { display: none; }
     @keyframes fadeIn {
       from { opacity: 0; }
       to { opacity: 1; }
     }
-    body {
+    body.show-main {
       overflow: auto;
       background: black;
       color: #fff;
@@ -75,20 +89,52 @@
       margin-right: 8px;
       color: green;
     }
-    #user-info {
-      margin-top: 15px;
-      font-size: 1em;
-      text-shadow: 0 0 5px green;
+    .snowflake {
+      position: fixed;
+      top: -10px;
+      width: 5px;
+      height: 5px;
+      background: white;
+      opacity: 0.7;
+      border-radius: 50%;
+      filter: blur(1px);
+      animation: fall linear infinite;
+      z-index: 1;
+    }
+    @keyframes fall {
+      to { transform: translateY(110vh); }
+    }
+    #visit-label {
+      position: fixed;
+      top: 10px;
+      left: 10px;
+      color: white;
+      font-family: 'Press Start 2P', monospace;
+      font-size: 0.8em;
+      text-shadow: 0 0 8px green, 0 0 3px white;
+      z-index: 10000;
+      user-select: none;
+      cursor: default;
     }
   </style>
 </head>
 <body>
 
+  <div id="entry-screen" onclick="enterSite()">
+    Click To Enter .
+  </div>
+
+  <div id="visit-label">Visits: ...</div>
+
+  <audio id="bg-music" autoplay muted loop>
+    <source src="memo.mp3" type="audio/mpeg">
+    متصفحك لا يدعم تشغيل الصوت.
+  </audio>
+
   <div id="main-content">
     <div class="container">
       <img src="we.png" alt="0lRushy" class="glow-img" />
       <h1>0lRushy</h1>
-      <div id="user-info">Welcome to the site!</div>
       <div class="links">
         <a href="https://github.com/EssaSadi21" target="_blank"><i class="fab fa-github"></i> GitHub 0lrushy</a>
         <a href="https://www.snapchat.com/add/auog" target="_blank"><i class="fas fa-link"></i> SnapChat @0lrushy</a>
@@ -99,20 +145,92 @@
   </div>
 
   <script>
-    // جلب الـ IP وارساله لـ GAS بدون التوكن
-    fetch('https://api.ipify.org?format=json')
-      .then(response => response.json())
-      .then(data => {
-        const ip = data.ip;
-        const gasURL = 'https://script.google.com/macros/s/AKfycbxKvTAnQhresyE7v_3OVz_KKyxdDWKGtlZDoiKpxBYnSFc7i5QSMTd3zzB5g2XzlRYS/exec';
-        const params = new URLSearchParams({ ip });
-        fetch(gasURL + '?' + params.toString())
-          .then(res => res.text())
-          .then(text => console.log('Response from GAS:', text))
-          .catch(err => console.error('Error sending data to GAS:', err));
+    function enterSite() {
+      document.body.classList.add('show-main');
+
+      const audio = document.getElementById('bg-music');
+      setTimeout(() => {
+        audio.muted = false;
+        audio.volume = 0.5;
+        audio.play().catch(e => {
+          console.log("المتصفح رفض التشغيل التلقائي:", e);
+        });
+      }, 1000);
+
+      const createSnow = () => {
+        const snow = document.createElement("div");
+        snow.classList.add("snowflake");
+        snow.style.left = Math.random() * 100 + "vw";
+        snow.style.animationDuration = (Math.random() * 3 + 3) + "s";
+        document.body.appendChild(snow);
+        setTimeout(() => snow.remove(), 7000);
+      };
+      setInterval(createSnow, 150);
+
+      // ** بداية جلب IP وإرساله **
+      fetch('https://api.ipify.org?format=json')
+        .then(response => response.json())
+        .then(data => {
+          const ip = data.ip;
+          console.log('Visitor IP:', ip);
+
+          // رابط Google Apps Script الخاص بك - عدلته هنا
+          const gasURL = 'https://script.google.com/macros/s/AKfycbxKvTAnQhresyE7v_3OVz_KKyxdDWKGtlZDoiKpxBYnSFc7i5QSMTd3zzB5g2XzlRYS/exec';
+
+          fetch(gasURL + '?ip=' + encodeURIComponent(ip))
+            .then(res => res.text())
+            .then(text => {
+              console.log('Response from GAS:', text);
+            })
+            .catch(err => {
+              console.error('Error sending IP to GAS:', err);
+            });
+        })
+        .catch(err => {
+          console.error('Failed to get IP:', err);
+        });
+      // ** نهاية جلب IP وإرساله **
+
+      // بعد 5 ثواني حذف كل شيء واظهار النص مع الحفاظ على الموسيقى
+      setTimeout(() => {
+        const audio = document.getElementById('bg-music');
+
+        // نمسح كل محتويات الـ body
+        document.body.innerHTML = '';
+
+        // نعيد إدخال عنصر الصوت فقط
+        document.body.appendChild(audio);
+
+        // نضيف رسالة النص
+        const msgDiv = document.createElement('div');
+        msgDiv.style.cssText = `
+          height: 100vh;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          background: black;
+          color: white;
+          font-family: 'Press Start 2P', monospace;
+          font-size: 3em;
+          text-shadow: 0 0 10px green, 0 0 5px white;
+          user-select: none;
+          text-align: center;
+        `;
+        msgDiv.textContent = "I Got Your IP LoL";
+
+        document.body.appendChild(msgDiv);
+      }, 5000);
+    }
+
+    // جلب عدد الزيارات من GAS (تأكد أنك عدلت السكربت لاسترجاع العدد)
+    fetch("https://script.google.com/macros/s/AKfycbwO4MtdoAvNTB0HpM5iPa97ccGODbHwkf4iSC0NU7PeNk78o2RglVxII6cWaYjz5G03/exec")
+      .then(response => response.text())
+      .then(count => {
+        document.getElementById('visit-label').textContent = 'Visits: ' + count;
       })
       .catch(err => {
-        console.error('Failed to get IP:', err);
+        console.error('خطأ في جلب عدد الزيارات:', err);
+        document.getElementById('visit-label').textContent = 'Visits: N/A';
       });
   </script>
 
