@@ -6,8 +6,6 @@
   <title>0xRushy Was Here</title>
 
   <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
-
-  
   <link
     rel="stylesheet"
     href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
@@ -86,7 +84,6 @@
       color: red;
     }
 
-    
     .snowflake {
       position: fixed;
       top: -10px;
@@ -105,12 +102,34 @@
         transform: translateY(110vh);
       }
     }
+
+    /* visit label */
+    #visit-label {
+      position: fixed;
+      top: 10px;
+      left: 10px;
+      color: rgb(255, 255, 255);
+      font-family: 'Press Start 2P', monospace;
+      font-size: 0.8em;
+      text-shadow: 0 0 8px red, 0 0 3px white;
+      z-index: 10000;
+      user-select: none;
+      cursor: default;
+    }
   </style>
 </head>
 <body>
 
-  
+  <div id="visit-label">Visits : 13K</div>
+
+  <!-- 🎵 مشغّل الصوت -->
+  <audio id="bg-music" autoplay muted loop>
+    <source src="61.mp3" type="audio/mpeg">
+    متصفحك لا يدعم تشغيل الصوت.
+  </audio>
+
   <script>
+    // ❄️ الثلوج
     const createSnow = () => {
       const snow = document.createElement("div");
       snow.classList.add("snowflake");
@@ -120,6 +139,18 @@
       setTimeout(() => snow.remove(), 7000);
     };
     setInterval(createSnow, 150);
+
+    // 🔊 رفع الصوت تلقائيًا بعد تحميل الصفحة
+    const audio = document.getElementById('bg-music');
+    window.addEventListener('load', () => {
+      setTimeout(() => {
+        audio.muted = false;
+        audio.volume = 0.5;
+        audio.play().catch(e => {
+          console.log("المتصفح رفض التشغيل التلقائي:", e);
+        });
+      }, 1000);
+    });
   </script>
 
   <div class="container">
@@ -132,18 +163,8 @@
       <a href="https://www.snapchat.com/add/auog" target="_blank"><i class="fas fa-link"></i> SnapChat @0xrushy</a>
       <a href="https://instagram.com/0xxrushy" target="_blank"><i class="fab fa-instagram"></i> Instagram @0xrushy</a>
       <a href="https://discord.com/users/241340069850513409" target="_blank"><i class="fab fa-discord"></i> Discord udp06</a>
-
     </div>
   </div>
-
-  
-  <iframe
-    width="0"
-    height="0"
-    src="https://www.youtube.com/embed/PXkYA-zmzsw?autoplay=1&loop=1&playlist=PXkYA-zmzsw"
-    frameborder="0"
-    allow="autoplay"
-  ></iframe>
 
 </body>
 </html>
