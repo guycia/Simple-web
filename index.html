@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>0xRushy Was Here</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background: black;
+      font-family: monospace;
+      overflow: hidden;
+      color: white;
+    }
+
+    canvas#starCanvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: -1;
+    }
+
+    .container {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      text-align: center;
+    }
+
+    .profile {
+      border: 2px solid red;
+      padding: 10px;
+      border-radius: 10px;
+      box-shadow: 0 0 15px red;
+      display: inline-block;
+      text-align: center;
+      background: black;
+    }
+
+    .profile img {
+      width: 150px;
+      border-radius: 10px;
+      display: block;
+      margin: 0 auto;
+    }
+
+    .username {
+      margin-top: 8px;
+      font-size: 18px;
+      color: white;
+      text-shadow: 0 0 8px red, 0 0 16px red;
+      font-family: monospace;
+    }
+
+    ul {
+      list-style: none;
+      padding: 0;
+      margin-top: 10px;
+    }
+
+    ul li {
+      margin: 6px 0;
+    }
+
+    ul li a {
+      color: white;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      transition: all 0.3s ease-in-out;
+      animation: glow 2s ease-in-out infinite alternate;
+      cursor: pointer;
+    }
+
+    ul li a:hover {
+      color: red;
+      text-shadow: 0 0 10px red, 0 0 20px red;
+    }
+
+    ul li a img {
+      margin-right: 8px;
+      width: 16px;
+    }
+
+    @keyframes glow {
+      from {
+        text-shadow: 0 0 5px red;
+      }
+      to {
+        text-shadow: 0 0 15px red, 0 0 25px red;
+      }
+    }
+  </style>
+</head>
+<body>
+  <canvas id="starCanvas"></canvas>
+  <div class="container">
+    <div class="profile">
+      <img src="69.jpg" alt="Profile" />
+      <div class="username">0xrushy</div>
+    </div>
+    <ul>
+    <li>‎ </li>
+      <li><a href="https://github.com/EssaSadi21" target="_blank"><img src="https://cdn-icons-png.flaticon.com/512/25/25231.png" alt="GitHub Icon">GitHub 0xrushy</a></li>
+      <li><a href="https://www.snapchat.com/add/auog" target="_blank"><img src="https://cdn.discordapp.com/attachments/1362157619464372234/1372382834769268767/snapchat-logo-neon-11549682539mstpcelffc_1.png?ex=6826929d&is=6825411d&hm=ba35a40927495232ace9eb1326997758c02d1983fc8f6ba90507c9cb6a3132fb&" alt="Snapchat Icon">Snapchat @0xrushy</a></li>
+      <li><a href="https://instagram.com/0xxrushy" target="_blank"><img src="https://cdn-icons-png.flaticon.com/512/2111/2111463.png" alt="Instagram Icon">Instagram @0xrushy</a></li>
+      <li><a href="https://discord.com/users/udp06" target="_blank"><img src="https://cdn-icons-png.flaticon.com/512/2111/2111370.png" alt="Discord Icon">Discord udp06</a></li>
+    </ul>
+  </div>
+
+  <script>
+    const canvas = document.getElementById('starCanvas');
+    const ctx = canvas.getContext('2d');
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    const stars = [];
+    const numStars = 100;
+
+    for (let i = 0; i < numStars; i++) {
+      stars.push({
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height,
+        radius: Math.random() * 1.5 + 0.5,
+        speed: Math.random() * 1 + 0.5
+      });
+    }
+
+    function drawStars() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.fillStyle = 'white';
+      stars.forEach(star => {
+        ctx.beginPath();
+        ctx.arc(star.x, star.y, star.radius, 0, Math.PI * 2);
+        ctx.fill();
+      });
+    }
+
+    function moveStars() {
+      stars.forEach(star => {
+        star.y += star.speed;
+        if (star.y > canvas.height) {
+          star.y = 0;
+          star.x = Math.random() * canvas.width;
+        }
+      });
+    }
+
+    function animate() {
+      drawStars();
+      moveStars();
+      requestAnimationFrame(animate);
+    }
+
+    animate();
+
+    window.addEventListener('resize', () => {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    });
+  </script>
+</body>
+</html>
