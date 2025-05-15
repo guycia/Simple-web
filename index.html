@@ -4,163 +4,146 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>0xRushy Was Here</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+
+  
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+    crossorigin="anonymous"
+    referrerpolicy="no-referrer"
+  />
+
   <style>
-    body {
+    * {
       margin: 0;
       padding: 0;
-      background: black;
-      font-family: monospace;
-      overflow: hidden;
-      color: white;
+      box-sizing: border-box;
     }
 
-    canvas#starCanvas {
-      position: fixed;
-      top: 0;
-      left: 0;
-      z-index: -1;
+    body {
+      background: #000;
+      color: #fff;
+      font-family: 'Press Start 2P', monospace;
+      overflow: hidden;
+      animation: fadeIn 2s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
     }
 
     .container {
       display: flex;
       flex-direction: column;
+      align-items: center;
       justify-content: center;
-      align-items: center;
       height: 100vh;
+      position: relative;
+      z-index: 2;
       text-align: center;
+      padding: 20px;
     }
 
-    .profile {
-      border: 2px solid red;
-      padding: 10px;
-      border-radius: 10px;
-      box-shadow: 0 0 15px red;
-      display: inline-block;
-      text-align: center;
-      background: black;
+    .glow-img {
+      border: 4px solid red;
+      box-shadow: 0 0 25px red;
+      border-radius: 12px;
+      max-width: 240px;
+      margin-bottom: 25px;
     }
 
-    .profile img {
-      width: 150px;
-      border-radius: 10px;
-      display: block;
-      margin: 0 auto;
+    h1 {
+      font-size: 1.2em;
+      text-shadow: 0 0 8px red, 0 0 3px white;
+      margin-bottom: 20px;
     }
 
-    .username {
-      margin-top: 8px;
-      font-size: 18px;
-      color: white;
-      text-shadow: 0 0 8px red, 0 0 16px red;
-      font-family: monospace;
+    .links {
+      margin-top: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
     }
 
-    ul {
-      list-style: none;
-      padding: 0;
-      margin-top: 10px;
-    }
-
-    ul li {
-      margin: 6px 0;
-    }
-
-    ul li a {
-      color: white;
+    .links a {
+      color: #fff;
       text-decoration: none;
-      display: inline-flex;
-      align-items: center;
-      transition: all 0.3s ease-in-out;
-      animation: glow 2s ease-in-out infinite alternate;
-      cursor: pointer;
+      font-size: 0.75em;
+      transition: 0.3s;
+      text-shadow: 0 0 5px red;
     }
 
-    ul li a:hover {
+    .links a:hover {
       color: red;
-      text-shadow: 0 0 10px red, 0 0 20px red;
+      text-shadow: 0 0 10px red, 0 0 5px white;
     }
 
-    ul li a img {
+    .links i {
       margin-right: 8px;
-      width: 16px;
+      color: red;
     }
 
-    @keyframes glow {
-      from {
-        text-shadow: 0 0 5px red;
-      }
+    
+    .snowflake {
+      position: fixed;
+      top: -10px;
+      width: 5px;
+      height: 5px;
+      background: white;
+      opacity: 0.7;
+      border-radius: 50%;
+      filter: blur(1px);
+      animation: fall linear infinite;
+      z-index: 1;
+    }
+
+    @keyframes fall {
       to {
-        text-shadow: 0 0 15px red, 0 0 25px red;
+        transform: translateY(110vh);
       }
     }
   </style>
 </head>
 <body>
-  <canvas id="starCanvas"></canvas>
+
+  
+  <script>
+    const createSnow = () => {
+      const snow = document.createElement("div");
+      snow.classList.add("snowflake");
+      snow.style.left = Math.random() * 100 + "vw";
+      snow.style.animationDuration = (Math.random() * 3 + 3) + "s";
+      document.body.appendChild(snow);
+      setTimeout(() => snow.remove(), 7000);
+    };
+    setInterval(createSnow, 150);
+  </script>
+
   <div class="container">
-    <div class="profile">
-      <img src="69.jpg" alt="Profile" />
-      <div class="username">0xrushy</div>
+    <img src="69.jpg" alt="0xRushy" class="glow-img" />
+
+    <h1>0xrushy</h1>
+
+    <div class="links">
+      <a href="https://github.com/EssaSadi21" target="_blank"><i class="fab fa-github"></i> GitHub 0xrushy</a>
+      <a href="https://www.snapchat.com/add/auog" target="_blank"><i class="fas fa-link"></i> SnapChat @0xrushy</a>
+      <a href="https://instagram.com/0xxrushy" target="_blank"><i class="fab fa-instagram"></i> Instagram @0xrushy</a>
+      <a href="https://discord.com/users/241340069850513409" target="_blank"><i class="fab fa-discord"></i> Discord udp06</a>
+
     </div>
-    <ul>
-    <li>‎ </li>
-      <li><a href="https://github.com/EssaSadi21" target="_blank"><img src="https://cdn-icons-png.flaticon.com/512/25/25231.png" alt="GitHub Icon">GitHub 0xrushy</a></li>
-      <li><a href="https://www.snapchat.com/add/auog" target="_blank"><img src="https://cdn.discordapp.com/attachments/1362157619464372234/1372382834769268767/snapchat-logo-neon-11549682539mstpcelffc_1.png?ex=6826929d&is=6825411d&hm=ba35a40927495232ace9eb1326997758c02d1983fc8f6ba90507c9cb6a3132fb&" alt="Snapchat Icon">Snapchat @0xrushy</a></li>
-      <li><a href="https://instagram.com/0xxrushy" target="_blank"><img src="https://cdn-icons-png.flaticon.com/512/2111/2111463.png" alt="Instagram Icon">Instagram @0xrushy</a></li>
-      <li><a href="https://discord.com/users/udp06" target="_blank"><img src="https://cdn-icons-png.flaticon.com/512/2111/2111370.png" alt="Discord Icon">Discord udp06</a></li>
-    </ul>
   </div>
 
-  <script>
-    const canvas = document.getElementById('starCanvas');
-    const ctx = canvas.getContext('2d');
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
+  
+  <iframe
+    width="0"
+    height="0"
+    src="https://www.youtube.com/embed/PXkYA-zmzsw?autoplay=1&loop=1&playlist=PXkYA-zmzsw"
+    frameborder="0"
+    allow="autoplay"
+  ></iframe>
 
-    const stars = [];
-    const numStars = 100;
-
-    for (let i = 0; i < numStars; i++) {
-      stars.push({
-        x: Math.random() * canvas.width,
-        y: Math.random() * canvas.height,
-        radius: Math.random() * 1.5 + 0.5,
-        speed: Math.random() * 1 + 0.5
-      });
-    }
-
-    function drawStars() {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      ctx.fillStyle = 'white';
-      stars.forEach(star => {
-        ctx.beginPath();
-        ctx.arc(star.x, star.y, star.radius, 0, Math.PI * 2);
-        ctx.fill();
-      });
-    }
-
-    function moveStars() {
-      stars.forEach(star => {
-        star.y += star.speed;
-        if (star.y > canvas.height) {
-          star.y = 0;
-          star.x = Math.random() * canvas.width;
-        }
-      });
-    }
-
-    function animate() {
-      drawStars();
-      moveStars();
-      requestAnimationFrame(animate);
-    }
-
-    animate();
-
-    window.addEventListener('resize', () => {
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
-    });
-  </script>
 </body>
 </html>
