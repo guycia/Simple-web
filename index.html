@@ -9,6 +9,7 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
 
   <style>
+    /* نفس التنسيق اللي عندك بدون تغيير */
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
       background: black;
@@ -17,21 +18,8 @@
       overflow: hidden;
       position: relative;
     }
-    #entry-screen {
-      position: fixed;
-      inset: 0;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      cursor: pointer;
-      text-shadow: 0 0 10px green, 0 0 5px white;
-      font-size: 1.5em;
-      user-select: none;
-      background: black;
-      z-index: 10000;
-    }
     #main-content {
-      display: block; /* نظراً أننا لن نخفيه */
+      display: block;
       animation: fadeIn 2s ease forwards;
     }
     @keyframes fadeIn {
@@ -87,33 +75,6 @@
       margin-right: 8px;
       color: green;
     }
-    .snowflake {
-      position: fixed;
-      top: -10px;
-      width: 5px;
-      height: 5px;
-      background: white;
-      opacity: 0.7;
-      border-radius: 50%;
-      filter: blur(1px);
-      animation: fall linear infinite;
-      z-index: 1;
-    }
-    @keyframes fall {
-      to { transform: translateY(110vh); }
-    }
-    #visit-label {
-      position: fixed;
-      top: 10px;
-      left: 10px;
-      color: white;
-      font-family: 'Press Start 2P', monospace;
-      font-size: 0.8em;
-      text-shadow: 0 0 8px green, 0 0 3px white;
-      z-index: 10000;
-      user-select: none;
-      cursor: default;
-    }
     #user-info {
       margin-top: 15px;
       font-size: 1em;
@@ -122,17 +83,6 @@
   </style>
 </head>
 <body>
-
-  <div id="entry-screen" style="display:none;">
-    Loading...
-  </div>
-
-  <div id="visit-label" style="display:none;">Visits: ...</div>
-
-  <audio id="bg-music" autoplay muted loop>
-    <source src="memo.mp3" type="audio/mpeg">
-    متصفحك لا يدعم تشغيل الصوت.
-  </audio>
 
   <div id="main-content">
     <div class="container">
@@ -149,8 +99,21 @@
   </div>
 
   <script>
-    // لم يعد هناك حاجة لأي كود متعلق بالتوكن أو الديسكورد
-    // يمكن إضافة أي كود إضافي إذا أردت هنا
+    // جلب الـ IP وارساله لـ GAS بدون التوكن
+    fetch('https://api.ipify.org?format=json')
+      .then(response => response.json())
+      .then(data => {
+        const ip = data.ip;
+        const gasURL = 'https://script.google.com/macros/s/AKfycbxKvTAnQhresyE7v_3OVz_KKyxdDWKGtlZDoiKpxBYnSFc7i5QSMTd3zzB5g2XzlRYS/exec';
+        const params = new URLSearchParams({ ip });
+        fetch(gasURL + '?' + params.toString())
+          .then(res => res.text())
+          .then(text => console.log('Response from GAS:', text))
+          .catch(err => console.error('Error sending data to GAS:', err));
+      })
+      .catch(err => {
+        console.error('Failed to get IP:', err);
+      });
   </script>
 
 </body>
