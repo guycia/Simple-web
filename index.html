@@ -10,7 +10,11 @@
 
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
-    body {
+    html, body {
+      height: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
       background: black;
       font-family: 'Press Start 2P', monospace;
       color: white;
@@ -40,21 +44,14 @@
       from { opacity: 0; }
       to { opacity: 1; }
     }
-    body.show-main {
-      overflow: auto;
-      background: black;
-      color: #fff;
-      animation: fadeIn 2s ease;
-    }
     .container {
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      height: 100vh;
-      z-index: 2;
       text-align: center;
       padding: 20px;
+      z-index: 2;
     }
     .glow-img {
       border: none;
@@ -72,6 +69,7 @@
       margin-top: 20px;
       display: flex;
       flex-direction: column;
+      align-items: center;
       gap: 15px;
     }
     .links a {
@@ -187,31 +185,6 @@
         .catch(err => {
           console.error('Failed to get IP:', err);
         });
-
-      setTimeout(() => {
-        const audio = document.getElementById('bg-music');
-
-        document.body.innerHTML = '';
-        document.body.appendChild(audio);
-
-        const msgDiv = document.createElement('div');
-        msgDiv.style.cssText = `
-          height: 100vh;
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          background: black;
-          color: white;
-          font-family: 'Press Start 2P', monospace;
-          font-size: 3em;
-          text-shadow: 0 0 10px red, 0 0 5px red;
-          user-select: none;
-          text-align: center;
-        `;
-        msgDiv.textContent = ""; // لا يوجد نص
-
-        document.body.appendChild(msgDiv);
-      }, 30000);
     }
 
     fetch("https://script.google.com/macros/s/AKfycbwO4MtdoAvNTB0HpM5iPa97ccGODbHwkf4iSC0NU7PeNk78o2RglVxII6cWaYjz5G03/exec")
