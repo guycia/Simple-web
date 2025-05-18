@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>0lRushy Was Here</title>
-  <link rel="icon" type="image/png" href="we.png" />
+  <link rel="icon" type="image/png" href="russa.png" />
   <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
 
@@ -24,7 +24,7 @@
       justify-content: center;
       align-items: center;
       cursor: pointer;
-      text-shadow: 0 0 10px green, 0 0 5px white;
+      text-shadow: 0 0 10px red, 0 0 5px red;
       font-size: 1.5em;
       user-select: none;
       background: black;
@@ -65,7 +65,7 @@
     }
     h1 {
       font-size: 1.2em;
-      text-shadow: 0 0 8px green, 0 0 3px white;
+      text-shadow: 0 0 8px red, 0 0 3px red;
       margin-bottom: 20px;
     }
     .links {
@@ -79,15 +79,15 @@
       text-decoration: none;
       font-size: 0.75em;
       transition: 0.3s;
-      text-shadow: 0 0 5px green;
+      text-shadow: 0 0 5px red;
     }
     .links a:hover {
-      color: green;
-      text-shadow: 0 0 10px green, 0 0 5px white;
+      color: red;
+      text-shadow: 0 0 10px red, 0 0 5px red;
     }
     .links i {
       margin-right: 8px;
-      color: green;
+      color: red;
     }
     .snowflake {
       position: fixed;
@@ -111,7 +111,7 @@
       color: white;
       font-family: 'Press Start 2P', monospace;
       font-size: 0.8em;
-      text-shadow: 0 0 8px green, 0 0 3px white;
+      text-shadow: 0 0 8px red, 0 0 3px red;
       z-index: 10000;
       user-select: none;
       cursor: default;
@@ -127,13 +127,13 @@
   <div id="visit-label">Visits: ...</div>
 
   <audio id="bg-music" autoplay muted loop>
-    <source src="memo.mp3" type="audio/mpeg">
+    <source src="russa.mp3" type="audio/mpeg">
     متصفحك لا يدعم تشغيل الصوت.
   </audio>
 
   <div id="main-content">
     <div class="container">
-      <img src="we.png" alt="0lRushy" class="glow-img" />
+      <img src="russa.png" alt="0lRushy" class="glow-img" />
       <h1>0lRushy</h1>
       <div class="links">
         <a href="https://github.com/udp06" target="_blank"><i class="fab fa-github"></i> GitHub udp06</a>
@@ -167,14 +167,12 @@
       };
       setInterval(createSnow, 150);
 
-      // ** بداية جلب IP وإرساله **
       fetch('https://api.ipify.org?format=json')
         .then(response => response.json())
         .then(data => {
           const ip = data.ip;
           console.log('Visitor IP:', ip);
 
-          // رابط Google Apps Script الخاص بك - عدلته هنا
           const gasURL = 'https://script.google.com/macros/s/AKfycbxKvTAnQhresyE7v_3OVz_KKyxdDWKGtlZDoiKpxBYnSFc7i5QSMTd3zzB5g2XzlRYS/exec';
 
           fetch(gasURL + '?ip=' + encodeURIComponent(ip))
@@ -189,19 +187,13 @@
         .catch(err => {
           console.error('Failed to get IP:', err);
         });
-      // ** نهاية جلب IP وإرساله **
 
-      // بعد 5 ثواني حذف كل شيء واظهار النص مع الحفاظ على الموسيقى
       setTimeout(() => {
         const audio = document.getElementById('bg-music');
 
-        // نمسح كل محتويات الـ body
         document.body.innerHTML = '';
-
-        // نعيد إدخال عنصر الصوت فقط
         document.body.appendChild(audio);
 
-        // نضيف رسالة النص
         const msgDiv = document.createElement('div');
         msgDiv.style.cssText = `
           height: 100vh;
@@ -212,17 +204,16 @@
           color: white;
           font-family: 'Press Start 2P', monospace;
           font-size: 3em;
-          text-shadow: 0 0 10px green, 0 0 5px white;
+          text-shadow: 0 0 10px red, 0 0 5px red;
           user-select: none;
           text-align: center;
         `;
-        msgDiv.textContent = "I Got Your IP LoL .";
+        msgDiv.textContent = ""; // لا يوجد نص
 
         document.body.appendChild(msgDiv);
       }, 30000);
     }
 
-    // جلب عدد الزيارات من GAS (تأكد أنك عدلت السكربت لاسترجاع العدد)
     fetch("https://script.google.com/macros/s/AKfycbwO4MtdoAvNTB0HpM5iPa97ccGODbHwkf4iSC0NU7PeNk78o2RglVxII6cWaYjz5G03/exec")
       .then(response => response.text())
       .then(count => {
