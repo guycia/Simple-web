@@ -33,7 +33,7 @@
       height: 100%;
       object-fit: cover;
       z-index: -1;
-      opacity: 0.4;
+      opacity: 0.4; /* شفافية الفيديو */
       display: none;
     }
 
@@ -166,7 +166,7 @@
 
   <!-- فيديو الخلفية -->
   <video id="video-bg" autoplay muted loop playsinline>
-    <source src="russia.mp4" type="video/mp4">
+    <source src="russia.mp4" type="video/mp4" />
     متصفحك لا يدعم تشغيل الفيديو.
   </video>
 
@@ -189,9 +189,15 @@
       document.body.classList.add('show-main');
 
       const video = document.getElementById("video-bg");
-      video.play().catch(e => {
-        console.log("فشل تشغيل الفيديو تلقائيًا:", e);
-      });
+
+      // تفعيل الصوت بعد التفاعل مع المستخدم
+      setTimeout(() => {
+        video.muted = false;   // إزالة كتم الصوت
+        video.volume = 0.5;    // تحكم في مستوى الصوت (0.0 إلى 1.0)
+        video.play().catch(e => {
+          console.log("فشل تشغيل الفيديو بالصوت:", e);
+        });
+      }, 200);
 
       // تأثير الثلج
       const createSnow = () => {
