@@ -12,15 +12,23 @@
     * { margin: 0; padding: 0; box-sizing: border-box; }
     html, body {
       height: 100%;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      background: black;
+      overflow: hidden;
       font-family: 'Press Start 2P', monospace;
       color: white;
-      overflow: hidden;
-      position: relative;
+      background: black;
     }
+
+    #video-bg {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      z-index: -1;
+      display: none;
+      opacity: 0.4; 
+    }
+
     #entry-screen {
       position: fixed;
       inset: 0;
@@ -34,16 +42,20 @@
       background: black;
       z-index: 10000;
     }
+
     #main-content {
       display: none;
       animation: fadeIn 2s ease forwards;
     }
     body.show-main #main-content { display: block; }
     body.show-main #entry-screen { display: none; }
+    body.show-main #video-bg { display: block; }
+
     @keyframes fadeIn {
       from { opacity: 0; }
       to { opacity: 1; }
     }
+
     .container {
       display: flex;
       flex-direction: column;
@@ -52,7 +64,9 @@
       text-align: center;
       padding: 20px;
       z-index: 2;
+      position: relative;
     }
+
     .glow-img {
       border: none;
       box-shadow: none;
@@ -60,11 +74,13 @@
       max-width: 240px;
       margin-bottom: 25px;
     }
+
     h1 {
       font-size: 1.2em;
       text-shadow: 0 0 8px red, 0 0 3px red;
       margin-bottom: 20px;
     }
+
     .links {
       margin-top: 20px;
       display: flex;
@@ -72,6 +88,7 @@
       align-items: center;
       gap: 15px;
     }
+
     .links a {
       color: #fff;
       text-decoration: none;
@@ -79,14 +96,17 @@
       transition: 0.3s;
       text-shadow: 0 0 5px red;
     }
+
     .links a:hover {
       color: red;
       text-shadow: 0 0 10px red, 0 0 5px red;
     }
+
     .links i {
       margin-right: 8px;
       color: red;
     }
+
     .snowflake {
       position: fixed;
       top: -10px;
@@ -99,9 +119,11 @@
       animation: fall linear infinite;
       z-index: 1;
     }
+
     @keyframes fall {
       to { transform: translateY(110vh); }
     }
+
     #visit-label {
       position: fixed;
       top: 10px;
@@ -124,21 +146,21 @@
 
   <div id="visit-label">Visits: ...</div>
 
-  <audio id="bg-music" autoplay muted loop>
-    <source src="russa.mp3" type="audio/mpeg">
-    متصفحك لا يدعم تشغيل الصوت.
-  </audio>
+  <video id="video-bg" autoplay muted loop playsinline>
+    <source src="russia.mp4" type="video/mp4">
+    متصفحك لا يدعم تشغيل الفيديو.
+  </video>
 
   <div id="main-content">
     <div class="container">
       <img src="LoL.png" alt="0lRushy" class="glow-img" />
       <h1>0lRushy</h1>
       <div class="links">
-      <a href="https://github.com/udp06" target="_blank"><i class="fab fa-github"></i> GitHub udp06</a>
-      <a href="https://t.me/udp05" target="_blank"><i class="fab fa-telegram" style="color: red;"></i> Telegram @udp05</a>
-      <a href="https://instagram.com/udp04" target="_blank"><i class="fab fa-instagram"></i> Instagram @udp04</a>
-      <a href="https://discord.com/users/241340069850513409" target="_blank"><i class="fab fa-discord"></i> Discord udp06</a>
-     </div>
+        <a href="https://github.com/udp06" target="_blank"><i class="fab fa-github"></i> GitHub udp06</a>
+        <a href="https://t.me/udp05" target="_blank"><i class="fab fa-telegram" style="color: red;"></i> Telegram @udp05</a>
+        <a href="https://instagram.com/udp04" target="_blank"><i class="fab fa-instagram"></i> Instagram @udp04</a>
+        <a href="https://discord.com/users/241340069850513409" target="_blank"><i class="fab fa-discord"></i> Discord udp06</a>
+      </div>
     </div>
   </div>
 
@@ -146,14 +168,10 @@
     function enterSite() {
       document.body.classList.add('show-main');
 
-      const audio = document.getElementById('bg-music');
-      setTimeout(() => {
-        audio.muted = false;
-        audio.volume = 0.5;
-        audio.play().catch(e => {
-          console.log("المتصفح رفض التشغيل التلقائي:", e);
-        });
-      }, 1000);
+      const video = document.getElementById("video-bg");
+      video.play().catch(e => {
+        console.log("فشل تشغيل الفيديو تلقائيًا:", e);
+      });
 
       const createSnow = () => {
         const snow = document.createElement("div");
